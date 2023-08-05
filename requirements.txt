@@ -4,3 +4,5 @@ torch
 accelerate
 ffmpeg
 openai-whisper
+pyaudio
+wave
