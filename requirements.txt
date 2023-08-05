@@ -2,3 +2,5 @@ transformers
 flet
 torch
 accelerate
+ffmpeg
+openai-whisper
