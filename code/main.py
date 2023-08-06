@@ -58,7 +58,7 @@ class ChatterPage(ft.UserControl):
         self.messages.update()
         self.page.update()
 
-        self.messages.controls.append(self.message(message=llama.generate_response((main_prompt + message + "\nBOT:")), is_user=False))
+        self.messages.controls.append(self.message(message=llama.generate_response((main_prompt + message + "BOT:")), is_user=False))
         self.messages.update()
         self.page.update()
     
