@@ -2,7 +2,7 @@ transformers
 flet
 torch
 accelerate
-ffmpeg
 openai-whisper
 pyaudio
 wave
+ffmpeg-python
