@@ -1,4 +1,3 @@
-transformers
 flet
 torch
 accelerate
@@ -7,3 +6,4 @@ pyaudio
 wave
 ffmpeg-python
 XFormers
+llama-cpp-python 
