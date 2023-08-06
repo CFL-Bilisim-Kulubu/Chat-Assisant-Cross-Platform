@@ -4,7 +4,7 @@ import pyaudio
 import threading
 import time
 
-model = whisper.load_model("small.en")
+model = whisper.load_model("medium.en",device="cpu")
 
 class AudioRecording:
     def __init__(self):
