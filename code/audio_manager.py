@@ -6,17 +6,10 @@ import time
 
 model = whisper.load_model("small.en")
 
-    
-
-def analyze_audio():
-    return model.transcribe("audio.wav")["text"]
-
-
-
-
 class AudioRecording:
     def __init__(self):
         self.record = threading.Event()
+        self.finished_recording = threading.Event()
         print(self.record.is_set())
 
 
@@ -52,4 +45,12 @@ class AudioRecording:
         audio_writer.writeframes(b''.join(frames))
         audio_writer.close()
         audio.terminate()
+        self.finished_recording.set()
         print("recording finished")
+
+    
+
+    def analyze_audio(self):
+        while (not self.finished_recording.is_set()): # wait for recording to finish
+            time.sleep(0.2)
+        return model.transcribe("audio.wav")["text"]
