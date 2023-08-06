@@ -61,8 +61,6 @@ class ChatterPage(ft.UserControl):
         self.messages.controls.append(self.message(message=llama.generate_response((main_prompt + message + "\nBOT:")), is_user=False))
         self.messages.update()
         self.page.update()
-        
-        print(message)
     
     def record_audio(self, e=None):
         if self.recorder is None:
@@ -88,18 +86,32 @@ class ChatterPage(ft.UserControl):
             return ft.Container(
                 content=ft.Text(message),
                 border_radius=10,
-                bgcolor="#0F0F0F",
+                bgcolor="#3F3F3F",
                 alignment=ft.alignment.top_left,
 
             )
         else:
+            content_to_return = ft.Row([])
+
+            if message.startswith("\nI will"):
+                content_to_return.controls.append(ft.ElevatedButton(text="Confirm",on_click=self.apply_command))
+                self.set_command(message)
+
+            content_to_return.controls.append(ft.Text(message, color="#000000"))
+
             return ft.Container(
-                        content=ft.Text(message, color="#000000"),
+                        content=content_to_return,
                         border_radius=10,
                         bgcolor="#F0F0F0",
                         alignment=ft.alignment.top_left,
                     )
-    
+    def set_command(self, command):
+        print("command set" + command)
+        pass
+    def apply_command(self, e=None):
+        print("command applied")
+        pass
+
         
 
 def main(page: ft.Page):
