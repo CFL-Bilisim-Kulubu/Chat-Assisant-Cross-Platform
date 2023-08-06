@@ -1,4 +1,4 @@
-from commandparser import CommandParser
+from commandmanager import CommandParser
 from pprint import pprint
 import llama
 import audio_manager
@@ -6,7 +6,7 @@ from file_operations import read_config
 import flet as ft
 import datetime
 
-main_prompt = f"""
+base_prompt = f"""
 SYSTEM:
 Date of today is {datetime.datetime.now().strftime("%d/%m/%Y")}
 User's name is {read_config()['username']}
@@ -17,8 +17,8 @@ IF User wants you to arranga a meeting respond with "I will arrange a meeting at
 IF User wants you to send an email respond with "I will send an email to x with content y"
 IF User wants you to send a text respond with "I will send a text to x with content y"
 IF User wants you to get summary of a paragraph respond with summary of the paragraph
-IF User wants you to get summary of a book respond with summary of the book if you dont know the book respond with "I will try to get summary of the book from https://fourminutebooks.com/book-summaries/"
-IF User wants tou to get summary of a website content respond with "I will try to get summary of the x website"
+IF User wants you to get summary of a book respond with summary of the book if you dont know the book respond with "I will try to get summary of the book named x from https://fourminutebooks.com/book-summaries/"
+IF User wants tou to get summary of a website content respond with "I will try to get summary of the website named x"
 IF User says something else respond normally
 USER:
 Arrange a meeting at 3pm
@@ -62,7 +62,7 @@ class ChatterPage(ft.UserControl):
         self.messages.update()
         self.page.update()
 
-        self.messages.controls.append(self.message(message=llama.generate_response((main_prompt + message + "BOT:")), is_user=False))
+        self.messages.controls.append(self.message(message=llama.generate_response((base_prompt + message + "BOT:")), is_user=False))
         self.messages.update()
         self.page.update()
     
