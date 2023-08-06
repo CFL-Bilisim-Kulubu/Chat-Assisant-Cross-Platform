@@ -93,7 +93,7 @@ class ChatterPage(ft.UserControl):
         else:
             content_to_return = ft.Row([])
 
-            if message.startswith("I will"):
+            if message.startswith("\nI will"):
                 content_to_return.controls.append(ft.ElevatedButton(text="Confirm",on_click=self.apply_command))
                 self.set_command(message)
 
