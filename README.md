@@ -5,7 +5,9 @@ Before using :
 ```
 pip install -r requirements.txt
 huggingface-cli login
-
+ ```
+ Install llama.c
+ ```
 git clone https://github.com/ggerganov/llama.cpp  
 cd llama.cpp
 make 
