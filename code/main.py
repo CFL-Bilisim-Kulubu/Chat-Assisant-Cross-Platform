@@ -1,5 +1,5 @@
 
-#import llama
+import llama
 import audio_manager
 #import file_operations
 import flet as ft
@@ -53,7 +53,7 @@ class ChatterPage(ft.UserControl):
         else:
             print("stopped")
             self.record_button.icon = ft.icons.MIC
-            self.send_message(message=audio_manager.analyze_audio())
+            self.send_message(message=self.recorder.analyze_audio())
 
         self.record_button.update()
         self.page.update()
