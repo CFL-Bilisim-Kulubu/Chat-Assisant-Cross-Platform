@@ -1,13 +1,5 @@
-commandList = [
-    "email",
-    "text",
-    "reminder",
-    "summary",
-    "meeting",
-    "book",
-    "website",
 
-]
+
 class Command:
     def __init__(self, command=None, time=None, to=None, content=None, named=None):
         if command is not None:
@@ -27,22 +19,29 @@ class Command:
             return None
         
     def email(self, to, content):
-        pass
+        return "email sent to " + to + " with content " + content
     def text(self, to, content):
-        pass
+        return "text sent to " + to + " with content " + content
     def reminder(self, time):
-        pass
+        return "reminder set for " + time
     def website(self, website):
-        pass
+        return "opening website " + website
     def meeting(self, time):
         self.reminder(time)
     def book(self, book):
-        pass
-    def summary(self, book):
-        pass
+        return "summarizing book " + book
 
 
 class CommandParser:
+    commandList = [
+    "email",
+    "text",
+    "reminder",
+    "summary",
+    "meeting",
+    "book",
+    "website",
+    ]
     def __init__(self):
         self.command = None
         self.time = None
@@ -56,7 +55,7 @@ class CommandParser:
         words = command.split(" ").lower()
 
         for index, word in words:
-            if word in commandList:
+            if word in self.commandList:
                 self.command = word
                 self.commandFound = True
             elif word is "at":
