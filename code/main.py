@@ -1,9 +1,26 @@
 
 import llama
 import audio_manager
-#import file_operations
+from file_operations import read_config
 import flet as ft
+import datetime
 
+main_prompt = f"""
+SYSTEM:
+Date of today is {datetime.datetime.now().strftime("%d/%m/%Y")}
+User's name is {read_config()['username']}
+User's email is {read_config()['user_mail']}
+You are a text parser AI that simplifies commands relative to these commands given below: 
+IF User wants you to set a reminder respond with "I will set a reminder at x time"
+IF User wants you to arranga a meeting respond with "I will arrange a meeting at x time"
+IF User wants you to send an email respond with "I will send an email to x with content y"
+IF User wants you to send a text respond with "I will send a text to x with content y"
+USER:
+Arrange a meeting at 3pm
+BOT:
+I will arrange a meeting at 15.00 {datetime.datetime.now().strftime("%d/%m/%Y")}, {read_config()['username']}
+USER: 
+"""
 
 class ChatterPage(ft.UserControl):
     def build(self):
@@ -40,7 +57,7 @@ class ChatterPage(ft.UserControl):
         self.messages.update()
         self.page.update()
 
-        self.messages.controls.append(self.message(message=llama.generate_response(message), is_user=False))
+        self.messages.controls.append(self.message(message=llama.generate_response((main_prompt + message + "\nBOT:")), is_user=False))
         self.messages.update()
         self.page.update()
         
@@ -57,6 +74,9 @@ class ChatterPage(ft.UserControl):
         else:
             print("stopped")
             self.record_button.icon = ft.icons.MIC
+            self.record_button.update()
+            self.page.update()
+
             self.send_message(message=self.recorder.analyze_audio())
 
         self.record_button.update()
