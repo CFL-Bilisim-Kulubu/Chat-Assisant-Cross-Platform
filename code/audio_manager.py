@@ -3,8 +3,9 @@ import wave
 import pyaudio
 import threading
 import time
+from file_operations import read_config
 
-model = whisper.load_model("medium.en",device="cpu")
+model = whisper.load_model(read_config()["whisper_model"],device=read_config()["whisper_device"])
 
 class AudioRecording:
     def __init__(self):
