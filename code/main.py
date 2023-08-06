@@ -7,6 +7,7 @@ import flet as ft
 
 class ChatterPage(ft.UserControl):
     def build(self):
+        self.recorder = None
         self.messages = ft.Column()
         self.input = ft.TextField(hint_text="Type your message here", expand=True)
         self.record_button = ft.FloatingActionButton(icon=ft.icons.MIC, on_click=self.record_audio)
@@ -42,14 +43,15 @@ class ChatterPage(ft.UserControl):
         print(message)
     
     def record_audio(self, e=None):
-        print("Recording")
-        recorder = audio_manager.AudioRecording()
-        recorder.recording()
+        if self.recorder is None:
+            self.recorder = audio_manager.AudioRecording()
+        self.recorder.recording()
 
 
-        if recorder.record:
+        if self.recorder.record.is_set():
             self.record_button.icon = ft.icons.STOP
         else:
+            print("stopped")
             self.record_button.icon = ft.icons.MIC
             self.send_message(message=audio_manager.analyze_audio())
 
