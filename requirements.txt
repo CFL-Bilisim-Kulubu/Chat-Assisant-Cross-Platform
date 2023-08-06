@@ -6,3 +6,4 @@ openai-whisper
 pyaudio
 wave
 ffmpeg-python
+XFormers
