@@ -8,9 +8,24 @@ commandList = [
     "website",
 
 ]
-class Commands:
-    def __init__(self):
-        pass
+class Command:
+    def __init__(self, command=None, time=None, to=None, content=None, named=None):
+        if command is not None:
+            if self.command == "email":
+                return self.email(to, content)
+            elif self.command == "text":
+                return self.text(to, content)
+            elif self.command == "reminder":
+                return self.reminder(time)
+            elif self.command == "website":
+                return self.website(named)
+            elif self.command == "meeting":
+                return self.meeting(time)
+            elif self.command == "book":
+                return self.book(named)
+        else:
+            return None
+        
     def email(self, to, content):
         pass
     def text(self, to, content):
@@ -29,7 +44,12 @@ class Commands:
 
 class CommandParser:
     def __init__(self):
-        pass
+        self.command = None
+        self.time = None
+        self.to = None
+        self.content = None
+        self.named = None
+        self.commandFound = False
     def parse(self, command):
         self.command = None
 
@@ -66,24 +86,10 @@ class CommandParser:
                 except:
                     print("no named")
                     self.named = None
-
-        if self.commandFound:
-            if self.command == "email":
-                return Commands.email(self.to, self.content)
-            elif self.command == "text":
-                return Commands.text(self.to, self.content)
-            elif self.command == "reminder":
-                return Commands.reminder(self.time)
-            elif self.command == "website":
-                return Commands.website(self.named)
-            elif self.command == "meeting":
-                return Commands.meeting(self.time)
-            elif self.command == "book":
-                return Commands.book(self.named)
-        else:
-            return None
-
-        
-
-    def apply(self):
-        pass
+        return {
+            "command": self.command,
+            "time": self.time,
+            "to": self.to,
+            "content": self.content,
+            "named": self.named
+        }

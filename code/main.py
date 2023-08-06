@@ -1,4 +1,4 @@
-from commandmanager import CommandParser
+from commandmanager import CommandParser,Command
 from pprint import pprint
 import llama
 import audio_manager
@@ -20,12 +20,15 @@ IF User wants you to get summary of a paragraph respond with summary of the para
 IF User wants you to get summary of a book respond with summary of the book if you dont know the book respond with "I will try to get summary of the book named x from https://fourminutebooks.com/book-summaries/"
 IF User wants tou to get summary of a website content respond with "I will try to get summary of the website named x"
 IF User says something else respond normally
+
 USER:
 Arrange a meeting at 3pm
 BOT:
 I will arrange a meeting at 15.00 {datetime.datetime.now().strftime("%d/%m/%Y")}, {read_config()['username']}
 USER: 
 """
+
+old_prompts = ""
 
 class ChatterPage(ft.UserControl):
     def build(self):
@@ -62,7 +65,11 @@ class ChatterPage(ft.UserControl):
         self.messages.update()
         self.page.update()
 
-        self.messages.controls.append(self.message(message=llama.generate_response((base_prompt + message + "BOT:")), is_user=False))
+        response = llama.generate_response((base_prompt + old_prompts + message + "BOT:"))
+        old_prompts += message + "BOT: " + response + "\n"
+        pprint(response)
+
+        self.messages.controls.append(self.message(message=response, is_user=False))
         self.messages.update()
         self.page.update()
     
@@ -97,7 +104,7 @@ class ChatterPage(ft.UserControl):
         else:
             content_to_return = ft.Row([])
 
-            if message.startswith("\nI will"):
+            if message.startswith("I will") or message.startswith("\nI will") or message.startswith("\n\nI will"):
                 content_to_return.controls.append(ft.ElevatedButton(text="Confirm",on_click=self.apply_command(commandId=len(self.commandList) - 1)))
                 self.set_command(message)
 
@@ -113,8 +120,22 @@ class ChatterPage(ft.UserControl):
         pprint("command set" + command)
         self.commandList.append(CommandParser().parse(command))
         pass
-    def apply_command(self, e=None, commandId = None) :
-        self.commandList[commandId].apply()
+    def apply_command(self = None, e=None, commandId = None) :
+        
+        if commandId is not None:
+            commandResult = Command(
+                command=self.commandList[commandId]["command"],
+                time=self.commandList[commandId]["time"],
+                to=self.commandList[commandId]["to"],
+                content=self.commandList[commandId]["content"],
+                named=self.commandList[commandId]["named"],
+                )
+            pprint(commandResult)
+        else:
+            print("commandId is None")
+
+            
+
         print("command applied")
         pass
 
