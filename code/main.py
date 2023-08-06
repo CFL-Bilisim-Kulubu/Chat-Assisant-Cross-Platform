@@ -37,9 +37,13 @@ class ChatterPage(ft.UserControl):
             self.messages.controls = []
 
         self.messages.controls.append(self.message(message=message, is_user=True))
+        self.messages.update()
+        self.page.update()
+
         self.messages.controls.append(self.message(message=llama.generate_response(message), is_user=False))
         self.messages.update()
         self.page.update()
+        
         print(message)
     
     def record_audio(self, e=None):
