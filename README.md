@@ -11,4 +11,6 @@ huggingface-cli login
 git clone https://github.com/ggerganov/llama.cpp  
 cd llama.cpp
 make 
+cd models
+wget https://huggingface.co/TheBloke/vicuna-7B-1.1-GGML/resolve/main/vicuna-7b-1.1.ggmlv3.q4_0.bin   
 ```
