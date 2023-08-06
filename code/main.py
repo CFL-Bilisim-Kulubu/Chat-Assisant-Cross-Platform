@@ -1,4 +1,5 @@
-
+from commandparser import CommandParser
+from pprint import pprint
 import llama
 import audio_manager
 from file_operations import read_config
@@ -15,6 +16,9 @@ IF User wants you to set a reminder respond with "I will set a reminder at x tim
 IF User wants you to arranga a meeting respond with "I will arrange a meeting at x time"
 IF User wants you to send an email respond with "I will send an email to x with content y"
 IF User wants you to send a text respond with "I will send a text to x with content y"
+IF User wants you to get summary of a paragraph respond with summary of the paragraph
+IF User wants you to get summary of a book respond with summary of the book if you dont know the book respond with "I will try to get summary of the book from https://fourminutebooks.com/book-summaries/"
+IF User wants tou to get summary of a website content respond with "I will try to get summary of the x website"
 IF User says something else respond normally
 USER:
 Arrange a meeting at 3pm
@@ -94,7 +98,7 @@ class ChatterPage(ft.UserControl):
             content_to_return = ft.Row([])
 
             if message.startswith("\nI will"):
-                content_to_return.controls.append(ft.ElevatedButton(text="Confirm",on_click=self.apply_command))
+                content_to_return.controls.append(ft.ElevatedButton(text="Confirm",on_click=self.apply_command(commandId=len(self.commandList) - 1)))
                 self.set_command(message)
 
             content_to_return.controls.append(ft.Text(message, color="#000000"))
@@ -106,9 +110,11 @@ class ChatterPage(ft.UserControl):
                         alignment=ft.alignment.top_left,
                     )
     def set_command(self, command):
-        print("command set" + command)
+        pprint("command set" + command)
+        self.commandList.append(CommandParser().parse(command))
         pass
-    def apply_command(self, e=None):
+    def apply_command(self, e=None, commandId = None) :
+        self.commandList[commandId].apply()
         print("command applied")
         pass
 
