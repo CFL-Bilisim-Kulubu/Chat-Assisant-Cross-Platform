@@ -7,3 +7,4 @@ wave
 ffmpeg-python
 XFormers
 llama-cpp-python 
+requests
