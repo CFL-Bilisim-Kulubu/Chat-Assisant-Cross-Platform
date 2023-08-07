@@ -25,12 +25,12 @@ USER:
 Arrange a meeting at 3pm
 BOT:
 I will arrange a meeting at 15.00 {datetime.datetime.now().strftime("%d/%m/%Y")}, {read_config()['username']}
-USER: 
 """
 
-old_prompts = ""
 
 class ChatterPage(ft.UserControl):
+    old_prompts = ""
+    commandList = []
     def build(self):
         self.recorder = None
         self.messages = ft.Column(alignment=ft.CrossAxisAlignment.START)
@@ -58,6 +58,8 @@ class ChatterPage(ft.UserControl):
         if message is None:
             message = self.input.value
 
+        messageToSend = "USER:\n" + message
+
         if self.messages.controls is None:
             self.messages.controls = []
 
@@ -65,9 +67,9 @@ class ChatterPage(ft.UserControl):
         self.messages.update()
         self.page.update()
 
-        response = llama.generate_response((base_prompt + old_prompts + message + "BOT:"))
-        old_prompts += message + "BOT: " + response + "\n"
-        pprint(response)
+        response = llama.generate_response((base_prompt + self.old_prompts + messageToSend + "BOT:"))
+        self.old_prompts += messageToSend + "\nBOT:" + response + "\n"
+        pprint(self.old_prompts)
 
         self.messages.controls.append(self.message(message=response, is_user=False))
         self.messages.update()
@@ -105,8 +107,8 @@ class ChatterPage(ft.UserControl):
             content_to_return = ft.Row([])
 
             if message.startswith("I will") or message.startswith("\nI will") or message.startswith("\n\nI will"):
-                content_to_return.controls.append(ft.ElevatedButton(text="Confirm",on_click=self.apply_command(commandId=len(self.commandList) - 1)))
                 self.set_command(message)
+                content_to_return.controls.append(ft.ElevatedButton(text="Confirm",on_click=self.apply_command))
 
             content_to_return.controls.append(ft.Text(message, color="#000000"))
 
@@ -117,27 +119,28 @@ class ChatterPage(ft.UserControl):
                         alignment=ft.alignment.top_left,
                     )
     def set_command(self, command):
-        pprint("command set" + command)
         self.commandList.append(CommandParser().parse(command))
-        pass
-    def apply_command(self = None, e=None, commandId = None) :
-        
+
+        print("command set")           
+
+    def apply_command(self = None, e=None) :
+        commandId = len(self.commandList) - 1
+
+        print(self.commandList[commandId])
+
         if commandId is not None:
-            commandResult = Command(
+            command = Command(
                 command=self.commandList[commandId]["command"],
                 time=self.commandList[commandId]["time"],
                 to=self.commandList[commandId]["to"],
                 content=self.commandList[commandId]["content"],
                 named=self.commandList[commandId]["named"],
                 )
-            pprint(commandResult)
+            command.apply_command()
         else:
             print("commandId is None")
 
-            
-
         print("command applied")
-        pass
 
         
 
