@@ -77,7 +77,7 @@ class CommandParser:
     def parse(self, command):
         self.command = None
 
-        words = command.lower().split(" ")
+        words = command.lower().replace(",","").split(" ")
 
         for index, word in enumerate(words):
             if word in self.commandList:
@@ -86,7 +86,7 @@ class CommandParser:
             
             if word in "at":
                 try:
-                    self.time = words[index + 1]
+                    self.time = words[index + 1] + " "+ words[index + 2]
                 except:
                     print("no time")
                     self.time = None
