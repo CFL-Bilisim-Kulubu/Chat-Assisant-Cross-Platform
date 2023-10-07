@@ -8,3 +8,4 @@ ffmpeg-python
 XFormers
 llama-cpp-python 
 requests
+desktop-notifier

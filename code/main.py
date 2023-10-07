@@ -1,30 +1,19 @@
-from commandmanager import CommandParser,Command
 from pprint import pprint
 import llama
 import audio_manager
 from file_operations import read_config
 import flet as ft
 import datetime
+from desktop_notifier import DesktopNotifier
+
+notifier = DesktopNotifier()
 
 base_prompt = f"""
 SYSTEM:
-Date of today is {datetime.datetime.now().strftime("%d/%m/%Y")}
-User's name is {read_config()['username']}
-User's email is {read_config()['user_mail']}
-You are a text parser AI that simplifies commands relative to these commands given below: 
-IF User wants you to set a reminder respond with "I will set a reminder at x time"
-IF User wants you to arranga a meeting respond with "I will arrange a meeting at x time"
-IF User wants you to send an email respond with "I will send an email to x with content y"
-IF User wants you to send a text respond with "I will send a text to x with content y"
-IF User wants you to get summary of a paragraph respond with summary of the paragraph
-IF User wants you to get summary of a book respond with summary of the book if you dont know the book respond with "I will try to get summary of the book named x from https://fourminutebooks.com/book-summaries/"
-IF User wants tou to get summary of a website content respond with "I will try to get summary of the website named x"
-IF User says something else respond normally
+You are a helpful assistant
 
-USER:
-Arrange a meeting at 3pm
-BOT:
-I will arrange a meeting at 15.00 {datetime.datetime.now().strftime("%d/%m/%Y")}, {read_config()['username']}
+Now answer to the user
+
 """
 
 
@@ -54,7 +43,7 @@ class ChatterPage(ft.UserControl):
         
         return view
     
-    def send_message(self, e=None, message=None):
+    async def send_message(self, e=None, message=None):
         if message is None:
             message = self.input.value
 
@@ -74,6 +63,8 @@ class ChatterPage(ft.UserControl):
         self.messages.controls.append(self.message(message=response, is_user=False))
         self.messages.update()
         self.page.update()
+        
+        await notifier.send(title="Cross Platform Chat Assisant", message="Response completed!")
     
     def record_audio(self, e=None):
         if self.recorder is None:
@@ -105,11 +96,6 @@ class ChatterPage(ft.UserControl):
             )
         else:
             content_to_return = ft.Row([])
-
-            if message.startswith("I will") or message.startswith("\nI will") or message.startswith("\n\nI will"):
-                self.set_command(message)
-                content_to_return.controls.append(ft.ElevatedButton(text="Confirm",on_click=self.apply_command))
-
             content_to_return.controls.append(ft.Text(message, color="#000000"))
 
             return ft.Container(
@@ -118,29 +104,9 @@ class ChatterPage(ft.UserControl):
                         bgcolor="#F0F0F0",
                         alignment=ft.alignment.top_left,
                     )
-    def set_command(self, command):
-        self.commandList.append(CommandParser().parse(command))
+         
 
-        print("command set")           
-
-    def apply_command(self = None, e=None) :
-        commandId = len(self.commandList) - 1
-
-        print(self.commandList[commandId])
-
-        if commandId is not None:
-            command = Command(
-                command=self.commandList[commandId]["command"],
-                time=self.commandList[commandId]["time"],
-                to=self.commandList[commandId]["to"],
-                content=self.commandList[commandId]["content"],
-                named=self.commandList[commandId]["named"],
-                )
-            command.apply_command()
-        else:
-            print("commandId is None")
-
-        print("command applied")
+    
 
         
 
