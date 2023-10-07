@@ -9,3 +9,4 @@ XFormers
 llama-cpp-python 
 requests
 desktop-notifier
+plyer

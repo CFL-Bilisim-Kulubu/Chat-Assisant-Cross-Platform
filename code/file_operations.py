@@ -6,3 +6,9 @@ def read_config():
         config = json.load(f)
     f.close()
     return config
+
+def read_base_prompt():
+    with open("baseprompt.txt", "r") as f:
+        prompt = f.read()
+    f.close()
+    return prompt
