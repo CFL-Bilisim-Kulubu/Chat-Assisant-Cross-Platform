@@ -15,7 +15,7 @@ git clone https://github.com/ggerganov/llama.cpp
 cd llama.cpp
 make 
 cd models
-wget https://huggingface.co/TheBloke/Llama-2-7b-Chat-GGUF/resolve/main/llama-2-7b-chat.Q8_0.gguf 
+wget https://huggingface.co/TheBloke/Llama-2-7b-Chat-GGUF/blob/main/llama-2-7b-chat.Q2_K.gguf
 ```
 ## Windows
 To Install Llama.cpp
@@ -24,7 +24,7 @@ To Install Llama.cpp
 
 For more information to build on windows please visit [Llama.cpp Github Page](https://github.com/ggerganov/llama.cpp)
 
-Next download gguf model you want to use [This One Is Reccomended](https://huggingface.co/TheBloke/Llama-2-7b-Chat-GGUF/resolve/main/llama-2-7b-chat.Q8_0.gguf ) and move it to `llama.cpp/models` folder
+Next download gguf model you want to use [This One Is Reccomended](https://huggingface.co/TheBloke/Llama-2-7b-Chat-GGUF/blob/main/llama-2-7b-chat.Q2_K.gguf) and move it to `llama.cpp/models` folder
 
 
 Don't forget to configure ``` config.json ```
