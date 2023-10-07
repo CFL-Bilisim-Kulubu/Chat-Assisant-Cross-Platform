@@ -2,12 +2,12 @@
  A simple chat assisant made with Llama 2 and Whisper
 
 Before using : 
+ 
+Install llama.cpp into project folder if you want to use llama locally 
 ```
 pip install -r requirements.txt
-huggingface-cli login
  ```
- 
- Install llama.cpp into project folder if you want to use llama locally 
+# About Llama.cpp & Downloading Model
 
 ## Linux
  ```
