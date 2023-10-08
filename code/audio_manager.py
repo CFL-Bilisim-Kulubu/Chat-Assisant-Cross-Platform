@@ -1,8 +1,10 @@
+import pprint
 import whisper
 import wave
 import pyaudio
 import threading
 import time
+import os
 from file_operations import read_config
 
 model = whisper.load_model(read_config()["whisper_model"],device=read_config()["whisper_device"])
@@ -39,7 +41,12 @@ class AudioRecording:
             frames.append(data)
         
         stream.stop_stream()
-        audio_writer = wave.open("audio.wav", "wb")
+        
+        path = os.getcwd()
+        
+        print(f"{path}\\audio.wav")
+
+        audio_writer = wave.open(f"{path}\\audio.wav", "wb")
         audio_writer.setnchannels(1)
         audio_writer.setsampwidth(audio.get_sample_size(pyaudio.paInt16))
         audio_writer.setframerate(44100)
@@ -54,4 +61,7 @@ class AudioRecording:
     def analyze_audio(self):
         while (not self.finished_recording.is_set()): # wait for recording to finish
             time.sleep(0.2)
-        return model.transcribe("audio.wav")["text"]
+        time.sleep(0.2)   
+        path = os.getcwd()
+        
+        return model.transcribe(f"{path}\\audio.wav")["text"]

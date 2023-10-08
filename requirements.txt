@@ -5,6 +5,7 @@ openai-whisper
 pyaudio
 wave
 ffmpeg-python
+ffmpeg-downloader
 XFormers
 llama-cpp-python 
 requests
