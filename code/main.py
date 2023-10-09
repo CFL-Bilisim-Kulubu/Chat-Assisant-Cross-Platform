@@ -1,4 +1,4 @@
-from copy import copy
+from copy import copy, deepcopy
 from pprint import pprint
 import llama
 import audio_manager
@@ -23,7 +23,7 @@ class ChatterPage(ft.UserControl):
         self.input = ft.TextField(hint_text="Type your message here", expand=True)
         self.record_button = ft.FloatingActionButton(icon=ft.icons.MIC, on_click=self.record_audio)
         self.history_buttons = ft.Column([ft.FilledButton(text=f"Chat {self.chat_index}",on_click=self.load_chat,data=copy(self.chat_index))])
-        self.add_chat_button = ft.FilledButton(text=f"Create Chat {self.chat_index + 1}",on_click=self.create_chat)
+        self.add_chat_button = ft.FilledButton(text=f"Create Chat",on_click=self.create_chat)
 
         view = ft.Row(
                 [
@@ -32,8 +32,7 @@ class ChatterPage(ft.UserControl):
                         ft.Text("Chat List"),
                         self.history_buttons,  
                         self.add_chat_button,
-                    ]
-                    ),
+                    ]),
                     ft.Column(
                     [
                         ft.Text("Chat"),
@@ -42,13 +41,18 @@ class ChatterPage(ft.UserControl):
                             ft.FloatingActionButton(icon=ft.icons.SEND, on_click=self.send_message),
                             self.record_button,
                         ],
-                            vertical_alignment=ft.CrossAxisAlignment.END),
+                        vertical_alignment=ft.CrossAxisAlignment.END),
                         self.messages,
                 
                     ],    
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-                    expand=True)
-                ],
+                    expand=True),
+                    ft.Column(
+                    [
+                        
+                    ],
+                    horizontal_alignment=ft.CrossAxisAlignment.END)
+                ]
             )
         
         
@@ -83,10 +87,10 @@ class ChatterPage(ft.UserControl):
         
     def create_chat(self, e=None):
         self.chat_index += 1
-        self.histories[f"Chat {self.current_chat_index}"] = self.messages
+        self.histories[f"Chat {self.current_chat_index}"] = copy(self.messages.controls)
         self.messages.controls.clear()
         self.current_chat_index = self.chat_index
-        self.history_buttons.controls.append(ft.FilledButton(text=f"Chat {self.chat_index}",on_click=self.load_chat,data=copy(self.chat_index)))
+        self.history_buttons.controls.append(ft.FilledButton(text=f"Chat {self.chat_index}",on_click=self.load_chat))
         
         if self.messages.controls is None:
             self.messages.controls = []  
@@ -97,12 +101,15 @@ class ChatterPage(ft.UserControl):
         
 
     def load_chat(self, e):
-        self.current_chat_index = e.data
+        print(f"loading chat {e.control.text}")
+        
+        self.current_chat_index = int(''.join(x for x in str(e.control.text) if x.isdigit()))
         
         self.messages.controls.clear()
         
         if f"Chat {self.current_chat_index}" in self.histories:
-            self.messages.controls = self.histories[f"Chat {self.current_chat_index}"].controls
+            print(self.histories[f"Chat {self.current_chat_index}"])
+            self.messages.controls = self.histories[f"Chat {self.current_chat_index}"]
         
         self.messages.update()
         self.page.update()
