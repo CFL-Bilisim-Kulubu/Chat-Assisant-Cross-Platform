@@ -144,6 +144,7 @@ class ChatterPage(ft.UserControl):
         self.messages.controls.clear()
         
         if f"Chat {self.current_chat_index}" in self.chat_history_element:
+            print("Found Chat in memory, loading")
             self.messages.controls = self.chat_history_element[f"Chat {self.current_chat_index}"]
             self.old_prompts = self.prompt_history[f"Chat {self.current_chat_index}"]
         
@@ -152,21 +153,21 @@ class ChatterPage(ft.UserControl):
         
     def delete_chat(self,e):
         #Most complicated part of the whole UI, It would be better simplified and changed
-        print(f"deleting chat {e.control.text}")
+        print(f"{e.control.text}")
         
         index_to_delete = int(''.join(x for x in str(e.control.text) if x.isdigit()))
         
         if self.current_chat_index == index_to_delete:
-            print(f"not deleting chat {e.control.text}, page is still active")
+            print(f"not {e.control.text}, page is still active")
             
             notification.notify(
-            title = 'Cannot Delete Chat !',
+            title = 'Cannot Delete Current Chat !',
             message = 'Go to another chat page and try again !',
             timeout = 10
             )
             return
         
-        if f"Chat {self.current_chat_index}" in self.chat_history_element:
+        if f"Chat {index_to_delete}" in self.chat_history_element:
             self.chat_history_element.__delitem__(f"Chat {index_to_delete}")
             self.prompt_history.__delitem__(f"Chat {index_to_delete}")
         
