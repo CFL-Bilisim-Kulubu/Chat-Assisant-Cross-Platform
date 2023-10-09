@@ -17,6 +17,11 @@ make
 cd models
 wget https://huggingface.co/TheBloke/Llama-2-7b-Chat-GGUF/blob/main/llama-2-7b-chat.Q2_K.gguf
 ```
+
+If you want to use 13B parameters version too
+```
+wget https://huggingface.co/TheBloke/Llama-2-13B-GGUF/resolve/main/llama-2-13b.Q2_K.gguf
+```
 ## Windows
 To Install Llama.cpp
 1) You can use cmake method 
@@ -25,6 +30,8 @@ To Install Llama.cpp
 For more information to build on windows please visit [Llama.cpp Github Page](https://github.com/ggerganov/llama.cpp)
 
 Next download gguf model you want to use [This One Is Reccomended](https://huggingface.co/TheBloke/Llama-2-7b-Chat-GGUF/blob/main/llama-2-7b-chat.Q2_K.gguf) and move it to `llama.cpp/models` folder
+
+Also you can download 13B parameters version too https://huggingface.co/TheBloke/Llama-2-13B-GGUF/resolve/main/llama-2-13b.Q2_K.gguf
 
 
 Don't forget to configure ``` config.json ```
