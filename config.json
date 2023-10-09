@@ -2,7 +2,5 @@
   "llm_path": "llama.cpp/models/llama-2-7b-chat.Q2_K.gguf",
   "username": "Mert",
   "whisper_device": "cpu",
-  "//ALLOWED_WHISPER_DEVICE": "cpu  or  gpu",
-  "whisper_model": "medium.en",
-  "//ALLOWED_WHISPER_MODEL": "small.en,    medium.en,   large"
+  "whisper_model": "medium.en"
 }
