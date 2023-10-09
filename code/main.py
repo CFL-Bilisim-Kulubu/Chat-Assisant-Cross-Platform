@@ -196,7 +196,7 @@ class ChatterPage(ft.UserControl):
         
         self.history_buttons.update() #update visuals again
         
-        load_chat() #load default chat
+        self.load_chat() #load default chat
             
     
     def record_audio(self, e=None):
