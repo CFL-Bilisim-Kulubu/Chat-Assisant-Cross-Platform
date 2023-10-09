@@ -33,6 +33,6 @@ Next download gguf model you want to use [This One Is Reccomended](https://huggi
 
 Also you can download reccomended 13B parameters version from here: https://huggingface.co/TheBloke/Llama-2-13B-chat-GGUF/resolve/main/llama-2-13b-chat.Q2_K.gguf
 
-Response times tested on Intel Core i5-10200H is varies around 2 minutes to 5 seconds, the app sends an notification when response generated so you don't need to wait for response on web browser
+Response times tested on Intel Core i5-10200H is varies around 2 minutes to 5 seconds, on 7b model the app sends an notification when response generated so you don't need to wait for response on web browser
 
 Don't forget to configure ``` config.json ```
