@@ -1,12 +1,8 @@
 # Chat-Assisant-Cross-Platform
  A simple LLM UI made with Flet to be used with Llama 2 and Whisper
 
-Before using : 
- 
-Install llama.cpp into project folder if you want to use llama locally 
-```
-pip install -r requirements.txt
- ```
+For Turkish instructions: https://btt.community/t/chat-gpt-alternatifi-llama-2-icin-arayuz/2164
+
 # About Building Llama.cpp & Clonning Repository
 
 ## Linux
@@ -39,6 +35,12 @@ Response times tested on Intel Core i5-10200H is varies around 2 minutes to 5 se
 The app sends an notification when response generated so you don't need to wait for response on web browser
 
 Don't forget to configure `` config.json ``
+
+# Dependecies
+Install dependecies by: 
+```
+pip install -r requirements.txt
+ ```
 
 # Configuring
 
