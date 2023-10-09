@@ -1,5 +1,5 @@
 # Chat-Assisant-Cross-Platform
- A simple LLM UI made with Llama 2 and Whisper
+ A simple LLM UI made with Flet to be used with Llama 2 and Whisper
 
 Before using : 
  
