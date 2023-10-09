@@ -1,5 +1,6 @@
 from copy import copy, deepcopy
 from pprint import pprint
+from re import T
 import llama
 import audio_manager
 from file_operations import read_config, read_base_prompt
@@ -24,7 +25,15 @@ class ChatterPage(ft.UserControl):
         self.messages = ft.Column(alignment=ft.CrossAxisAlignment.START)
         self.input = ft.TextField(hint_text="Type your message here", expand=True)
         self.record_button = ft.FloatingActionButton(icon=ft.icons.MIC, on_click=self.record_audio)
-        self.history_buttons = ft.Column([ft.FilledButton(text=f"Chat {self.chat_index}",on_click=self.load_chat,data=copy(self.chat_index))])
+        self.send_button = ft.FloatingActionButton(icon=ft.icons.SEND, on_click=self.send_message)
+        
+        self.history_buttons = ft.Column([
+            ft.Row([
+                ft.FilledButton(text=f"Chat {self.chat_index}",on_click=self.load_chat),
+                ft.FilledButton(text=f"Delete Chat {self.chat_index}",on_click=self.delete_chat)
+                ])
+        ])
+        
         self.add_chat_button = ft.FilledButton(text=f"Create Chat",on_click=self.create_chat)
 
         view = ft.Row(
@@ -40,20 +49,15 @@ class ChatterPage(ft.UserControl):
                         ft.Text("Chat"),
                         ft.Row([
                             self.input,
-                            ft.FloatingActionButton(icon=ft.icons.SEND, on_click=self.send_message),
+                            self.send_button,
                             self.record_button,
                         ],
-                        vertical_alignment=ft.CrossAxisAlignment.END),
+                        vertical_alignment=ft.CrossAxisAlignment.START),
                         self.messages,
                 
                     ],    
                     horizontal_alignment=ft.CrossAxisAlignment.CENTER,
                     expand=True),
-                    ft.Column(
-                    [
-                        
-                    ],
-                    horizontal_alignment=ft.CrossAxisAlignment.END)
                 ]
             )
         
@@ -94,7 +98,12 @@ class ChatterPage(ft.UserControl):
         
         self.messages.controls.clear()
         self.current_chat_index = self.chat_index
-        self.history_buttons.controls.append(ft.FilledButton(text=f"Chat {self.chat_index}",on_click=self.load_chat))
+        self.history_buttons.controls.append(
+            ft.Row([
+                ft.FilledButton(text=f"Chat {self.chat_index}",on_click=self.load_chat),
+                ft.FilledButton(text=f"Delete Chat {self.chat_index}",on_click=self.delete_chat)
+                ])
+            )
         
         if self.messages.controls is None:
             self.messages.controls = []  
@@ -120,12 +129,17 @@ class ChatterPage(ft.UserControl):
         self.chat_history_element[f"Chat {current_chat_index}"] = texts
         self.prompt_history[f"Chat {current_chat_index}"] = self.old_prompts
 
-    def load_chat(self, e):
+    def load_chat(self, e=None):
         self.save_chat(self.current_chat_index)
         
-        print(f"loading chat {e.control.text}")
+        text = "1"
+        if e is not None:
+            print(f"loading chat {e.control.text}")
+            text = e.control.text
+        else:
+            print(f"loading chat 1")
         
-        self.current_chat_index = int(''.join(x for x in str(e.control.text) if x.isdigit()))
+        self.current_chat_index = int(''.join(x for x in str(text) if x.isdigit()))
         
         self.messages.controls.clear()
         
@@ -135,6 +149,55 @@ class ChatterPage(ft.UserControl):
         
         self.messages.update()
         self.page.update()
+        
+    def delete_chat(self,e):
+        #Most complicated part of the whole UI, It would be better simplified and changed
+        print(f"deleting chat {e.control.text}")
+        
+        index_to_delete = int(''.join(x for x in str(e.control.text) if x.isdigit()))
+        
+        if self.current_chat_index == index_to_delete:
+            print(f"not deleting chat {e.control.text}, page is still active")
+            
+            notification.notify(
+            title = 'Cannot Delete Chat !',
+            message = 'Go to another chat page and try again !',
+            timeout = 10
+            )
+            return
+        
+        if f"Chat {self.current_chat_index}" in self.chat_history_element:
+            self.chat_history_element.__delitem__(f"Chat {index_to_delete}")
+            self.prompt_history.__delitem__(f"Chat {index_to_delete}")
+        
+        if len(self.history_buttons.controls) != (index_to_delete):
+            for i in range(index_to_delete - 1, len(self.history_buttons.controls)):
+                #move chat history
+                if f"Chat {i + 1}" in self.chat_history_element:
+                    self.chat_history_element[f"Chat {i}"] = deepcopy(self.chat_history_element[f"Chat {i + 1}"])
+                    self.chat_history_element.__delitem__(f"Chat {i + 1}")
+                    
+                if f"Chat {i + 1}" in self.prompt_history:
+                    self.prompt_history[f"Chat {i}"] = deepcopy(self.prompt_history[f"Chat {i + 1}"])
+                    self.prompt_history.__delitem__(f"Chat {i + 1}")
+                
+                buttons = self.history_buttons.controls[i].controls # update buttons
+                for button in buttons:
+                    button.text = ''.join(x for x in str(button.text) if not x.isdigit()).join(f" {i}")
+                    
+                    
+                self.history_buttons.controls[i].controls[0].update() # update visuals
+                self.history_buttons.controls[i].controls[1].update()
+                self.history_buttons.controls[i].update()
+                self.history_buttons.update()
+        
+        self.history_buttons.controls.pop(index_to_delete - 1) #remove buttons
+        self.chat_index -= 1
+        
+        self.history_buttons.update() #update visuals again
+        
+        load_chat() #load default chat
+            
     
     def record_audio(self, e=None):
         if self.recorder is None:
@@ -165,9 +228,6 @@ class ChatterPage(ft.UserControl):
 
             )
         else:
-            #content_to_return = ft.Row([])
-            #content_to_return.controls.append(ft.Text(message, color="#000000"))
-
             return ft.Container(
                         content=ft.Text(message, color="#000000"),
                         border_radius=10,
