@@ -10,12 +10,14 @@ from plyer import notification
 
 base_prompt = read_base_prompt()
 
+
 class ChatterPage(ft.UserControl):
     old_prompts = ""
     commandList = []
     chat_index = 1
     current_chat_index = 1
-    histories = {}
+    chat_history_element = {}
+    prompt_history = {}
     
     def build(self):
         self.recorder = None
@@ -87,29 +89,49 @@ class ChatterPage(ft.UserControl):
         
     def create_chat(self, e=None):
         self.chat_index += 1
-        self.histories[f"Chat {self.current_chat_index}"] = copy(self.messages.controls)
+        
+        self.save_chat(self.current_chat_index)
+        
         self.messages.controls.clear()
         self.current_chat_index = self.chat_index
         self.history_buttons.controls.append(ft.FilledButton(text=f"Chat {self.chat_index}",on_click=self.load_chat))
         
         if self.messages.controls is None:
             self.messages.controls = []  
+        
+        self.old_prompts = ""
 
         self.history_buttons.update()
         self.messages.update()
         self.page.update()
         
+    def save_chat(self, current_chat_index):
+        texts = []
+
+        for element in self.messages.controls:
+            bg = element.bgcolor
+            texts.append(ft.Container(
+                content=ft.Text(element.content.value,color=element.content.color),
+                border_radius=10,
+                bgcolor=bg,
+                alignment=ft.alignment.top_left,
+            ))
+
+        self.chat_history_element[f"Chat {current_chat_index}"] = texts
+        self.prompt_history[f"Chat {current_chat_index}"] = self.old_prompts
 
     def load_chat(self, e):
+        self.save_chat(self.current_chat_index)
+        
         print(f"loading chat {e.control.text}")
         
         self.current_chat_index = int(''.join(x for x in str(e.control.text) if x.isdigit()))
         
         self.messages.controls.clear()
         
-        if f"Chat {self.current_chat_index}" in self.histories:
-            print(self.histories[f"Chat {self.current_chat_index}"])
-            self.messages.controls = self.histories[f"Chat {self.current_chat_index}"]
+        if f"Chat {self.current_chat_index}" in self.chat_history_element:
+            self.messages.controls = self.chat_history_element[f"Chat {self.current_chat_index}"]
+            self.old_prompts = self.prompt_history[f"Chat {self.current_chat_index}"]
         
         self.messages.update()
         self.page.update()
@@ -143,11 +165,11 @@ class ChatterPage(ft.UserControl):
 
             )
         else:
-            content_to_return = ft.Row([])
-            content_to_return.controls.append(ft.Text(message, color="#000000"))
+            #content_to_return = ft.Row([])
+            #content_to_return.controls.append(ft.Text(message, color="#000000"))
 
             return ft.Container(
-                        content=content_to_return,
+                        content=ft.Text(message, color="#000000"),
                         border_radius=10,
                         bgcolor="#F0F0F0",
                         alignment=ft.alignment.top_left,
