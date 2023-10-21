@@ -7,7 +7,6 @@ import llama
 import audio_manager
 from file_operations import read_config, read_base_prompt
 import flet as ft
-import flet_fastapi
 import datetime
 import asyncio
 from plyer import notification
@@ -285,7 +284,7 @@ def main(page: ft.Page):
     page.update()
 
 
-    
+
 if __name__ == "__main__":
-    app = flet_fastapi.app(main)
+    ft.app(target=main, view=ft.WEB_BROWSER,port = 5000)
 

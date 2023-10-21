@@ -1,5 +1,4 @@
 flet
-flet-fastapi
 torch
 accelerate
 openai-whisper
@@ -12,4 +11,3 @@ llama-cpp-python
 requests
 desktop-notifier
 plyer
-uvicorn
