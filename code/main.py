@@ -58,9 +58,10 @@ class ChatterPage(ft.UserControl):
                         self.messages,
                 
                     ],    
-                    horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+                    horizontal_alignment=ft.CrossAxisAlignment.START,
                     expand=True),
-                ]
+                ],
+                vertical_alignment=ft.CrossAxisAlignment.START,
             )
         
         
